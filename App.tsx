@@ -25,7 +25,7 @@ const App: React.FC = () => {
               <Shield className="text-white w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-tight text-white">Red Team <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Portfolio</span></h1>
+              <h1 className="text-lg font-bold tracking-tight text-white">Portfolio <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Website</span></h1>
             </div>
           </div>
           <div className="flex gap-4">
