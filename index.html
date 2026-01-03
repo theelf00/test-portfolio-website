@@ -264,8 +264,14 @@
         /* Skills Section */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .skills-grid .skill-card:nth-child(4) {
+            grid-column: 2;
         }
 
         .skill-card {
@@ -733,14 +739,14 @@
                 </div>
 
                 <div class="skill-card">
-                    <span class="skill-icon">⚔️</span>
-                    <h3>Tools & Frameworks</h3>
+                    <span class="skill-icon">🛡️</span>
+                    <h3>Red Team Tactics</h3>
                     <ul>
-                        <li>Metasploit / Cobalt Strike</li>
-                        <li>Burp Suite / OWASP ZAP</li>
-                        <li>Nmap / Nessus / OpenVAS</li>
-                        <li>Wireshark / tcpdump</li>
-                        <li>Bloodhound / Mimikatz</li>
+                        <li>MITRE ATT&CK Framework</li>
+                        <li>Social Engineering</li>
+                        <li>Active Directory Attacks</li>
+                        <li>Phishing Campaigns</li>
+                        <li>Post-Exploitation</li>
                     </ul>
                 </div>
 
@@ -757,14 +763,14 @@
                 </div>
 
                 <div class="skill-card">
-                    <span class="skill-icon">🛡️</span>
-                    <h3>Red Team Tactics</h3>
+                    <span class="skill-icon">⚔️</span>
+                    <h3>Tools & Frameworks</h3>
                     <ul>
-                        <li>MITRE ATT&CK Framework</li>
-                        <li>Social Engineering</li>
-                        <li>Active Directory Attacks</li>
-                        <li>Phishing Campaigns</li>
-                        <li>Post-Exploitation</li>
+                        <li>Metasploit / Cobalt Strike</li>
+                        <li>Burp Suite / OWASP ZAP</li>
+                        <li>Nmap / Nessus / OpenVAS</li>
+                        <li>Wireshark / tcpdump</li>
+                        <li>Bloodhound / Mimikatz</li>
                     </ul>
                 </div>
             </div>
