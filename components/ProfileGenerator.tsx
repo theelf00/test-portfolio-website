@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ProfileData, Skill } from '../types';
 import { AVAILABLE_SKILLS, POPULAR_TOOLS, BADGE_URLS, INITIAL_PROFILE } from '../constants';
 import { refineBio } from '../services/geminiService';
-import { Wand2, Loader2, Copy, Check, RefreshCw } from 'lucide-react';
+import { Wand2, Loader2, Copy, Check } from 'lucide-react';
 
 interface Props {
   onContentChange: (content: string) => void;
@@ -24,6 +24,7 @@ const ProfileGenerator: React.FC<Props> = ({ onContentChange }) => {
     }).join(' ');
 
     const certBadges = data.certifications.map(cert => {
+      if (!cert) return '';
       return `![${cert}](https://img.shields.io/badge/${encodeURIComponent(cert)}-Certified-gold)`;
     }).join(' ');
     
@@ -118,46 +119,55 @@ ${socialLinks}
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center pb-4 border-b border-border">
-        <h2 className="text-xl font-semibold text-accent">Profile Configuration</h2>
+    <div className="space-y-8">
+      <div className="flex justify-between items-center border-b border-border/50 pb-4">
+        <div>
+           <h2 className="text-xl font-bold text-white">Profile Configuration</h2>
+           <p className="text-xs text-text-muted mt-1">Craft your professional GitHub landing page</p>
+        </div>
         <button 
           onClick={copyToClipboard}
-          className="flex items-center gap-2 bg-surface hover:bg-border text-text px-3 py-1.5 rounded-md text-sm border border-border transition-colors"
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+            hasCopied 
+            ? 'bg-green-500/20 text-green-400 border border-green-500/50' 
+            : 'bg-surface-highlight text-text hover:bg-border border border-border'
+          }`}
         >
-          {hasCopied ? <Check size={16} className="text-primary" /> : <Copy size={16} />}
-          {hasCopied ? "Copied" : "Copy Markdown"}
+          {hasCopied ? <Check size={14} /> : <Copy size={14} />}
+          {hasCopied ? "Copied" : "Copy Code"}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-muted">Full Name</label>
+          <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">Full Name</label>
           <input 
             type="text" 
             value={data.name} 
             onChange={e => setData({...data, name: e.target.value})}
-            className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none"
+            className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-gray-600"
+            placeholder="e.g. John Doe"
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-muted">Professional Title</label>
+          <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">Professional Title</label>
           <input 
             type="text" 
             value={data.title} 
             onChange={e => setData({...data, title: e.target.value})}
-            className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none"
+            className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-gray-600"
+            placeholder="e.g. Red Teamer"
           />
         </div>
       </div>
 
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-text-muted">Professional Bio</label>
+            <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">Professional Bio</label>
             <button 
                 onClick={handleRefineBio}
                 disabled={isGenerating}
-                className="text-xs flex items-center gap-1 text-accent hover:text-white transition-colors disabled:opacity-50"
+                className="text-xs flex items-center gap-1.5 text-accent hover:text-accent-hover transition-colors disabled:opacity-50 font-medium px-2 py-1 rounded hover:bg-accent/10"
             >
                 {isGenerating ? <Loader2 size={12} className="animate-spin"/> : <Wand2 size={12} />}
                 Refine with AI
@@ -167,16 +177,20 @@ ${socialLinks}
           value={data.bio} 
           onChange={e => setData({...data, bio: e.target.value})}
           rows={4}
-          className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none"
+          className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-y text-sm leading-relaxed"
+          placeholder="Write a short bio about yourself..."
         />
       </div>
 
-      <div className="space-y-3">
-        <h3 className="text-sm font-bold text-text border-b border-border pb-1">Skills Selection</h3>
-        <div className="space-y-4">
+      <div className="space-y-4">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+          <span className="w-1 h-4 bg-primary rounded-full"></span>
+          Skills Selection
+        </h3>
+        <div className="grid gap-4">
           {AVAILABLE_SKILLS.map(cat => (
-            <div key={cat.category}>
-              <h4 className="text-xs font-semibold text-text-muted mb-2 uppercase tracking-wider">{cat.category}</h4>
+            <div key={cat.category} className="glass-card p-3 rounded-lg">
+              <h4 className="text-[10px] font-bold text-text-muted mb-3 uppercase tracking-widest">{cat.category}</h4>
               <div className="flex flex-wrap gap-2">
                 {cat.items.map(item => {
                   const isSelected = data.skills.some(s => s.category === cat.category && s.items.includes(item));
@@ -184,7 +198,11 @@ ${socialLinks}
                     <button
                       key={item}
                       onClick={() => toggleSkill(cat.category, item)}
-                      className={`text-xs px-2 py-1 rounded border transition-colors ${isSelected ? 'bg-primary/20 border-primary text-primary-hover' : 'bg-surface border-border text-text-muted hover:border-text-muted'}`}
+                      className={`text-xs px-2.5 py-1.5 rounded-md border transition-all duration-200 font-medium ${
+                        isSelected 
+                          ? 'bg-primary/10 border-primary/50 text-primary-hover shadow-[0_0_10px_rgba(16,185,129,0.1)]' 
+                          : 'bg-surface/50 border-border/50 text-text-muted hover:border-text-muted hover:text-text'
+                      }`}
                     >
                       {item}
                     </button>
@@ -196,16 +214,23 @@ ${socialLinks}
         </div>
       </div>
 
-      <div className="space-y-3">
-        <h3 className="text-sm font-bold text-text border-b border-border pb-1">Toolbox</h3>
-        <div className="flex flex-wrap gap-2">
+      <div className="space-y-4">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+           <span className="w-1 h-4 bg-accent rounded-full"></span>
+           Toolbox
+        </h3>
+        <div className="glass-card p-4 rounded-lg flex flex-wrap gap-2">
             {POPULAR_TOOLS.map(tool => {
                 const isSelected = data.tools.includes(tool);
                 return (
                     <button
                         key={tool}
                         onClick={() => toggleTool(tool)}
-                        className={`text-xs px-2 py-1 rounded border transition-colors ${isSelected ? 'bg-accent/20 border-accent text-accent' : 'bg-surface border-border text-text-muted hover:border-text-muted'}`}
+                        className={`text-xs px-2.5 py-1.5 rounded-md border transition-all duration-200 font-medium ${
+                          isSelected 
+                            ? 'bg-accent/10 border-accent/50 text-accent shadow-[0_0_10px_rgba(59,130,246,0.1)]' 
+                            : 'bg-surface/50 border-border/50 text-text-muted hover:border-text-muted hover:text-text'
+                        }`}
                     >
                         {tool}
                     </button>
@@ -215,12 +240,12 @@ ${socialLinks}
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-text-muted">Certifications (Comma separated)</label>
+        <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">Certifications (Comma separated)</label>
         <input 
             type="text" 
             value={data.certifications.join(', ')} 
             onChange={e => setData({...data, certifications: e.target.value.split(',').map(s => s.trim())})}
-            className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none"
+            className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-gray-600"
             placeholder="e.g. eJPT, OSCP, CompTIA Security+"
         />
       </div>

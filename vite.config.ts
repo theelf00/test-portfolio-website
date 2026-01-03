@@ -3,15 +3,14 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory.
-  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, (process as any).cwd(), '');
   
   return {
+    // IMPORTANT: This base path must match your GitHub repository name for GitHub Pages to work.
+    // Based on your screenshot, the repo is 'test-portfolio-website'.
+    base: '/test-portfolio-website/',
     plugins: [react()],
     define: {
-      // This exposes the API_KEY environment variable to the client-side code
-      // as `process.env.API_KEY`, matching your existing code structure.
       'process.env.API_KEY': JSON.stringify(env.API_KEY)
     }
   };

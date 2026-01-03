@@ -8,7 +8,7 @@ interface MarkdownPreviewProps {
 
 const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content }) => {
   return (
-    <div className="h-full overflow-auto bg-[#0d1117] border border-border rounded-lg p-6 shadow-xl">
+    <div className="h-full overflow-auto p-6 scroll-smooth bg-[#0d1117]">
       <div className="markdown-body">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {content}

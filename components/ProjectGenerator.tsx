@@ -83,121 +83,140 @@ A detailed PDF report containing the executive summary, technical findings, and 
   };
 
   return (
-    <div className="space-y-6">
-       <div className="flex justify-between items-center pb-4 border-b border-border">
-        <h2 className="text-xl font-semibold text-accent">Project Details</h2>
+    <div className="space-y-8">
+       <div className="flex justify-between items-center border-b border-border/50 pb-4">
+        <div>
+           <h2 className="text-xl font-bold text-white">Project Details</h2>
+           <p className="text-xs text-text-muted mt-1">Document your offensive security engagement</p>
+        </div>
         <button 
           onClick={copyToClipboard}
-          className="flex items-center gap-2 bg-surface hover:bg-border text-text px-3 py-1.5 rounded-md text-sm border border-border transition-colors"
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+            hasCopied 
+            ? 'bg-green-500/20 text-green-400 border border-green-500/50' 
+            : 'bg-surface-highlight text-text hover:bg-border border border-border'
+          }`}
         >
-          {hasCopied ? <Check size={16} className="text-primary" /> : <Copy size={16} />}
-          {hasCopied ? "Copied" : "Copy Markdown"}
+          {hasCopied ? <Check size={14} /> : <Copy size={14} />}
+          {hasCopied ? "Copied" : "Copy Code"}
         </button>
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-text-muted">Project Title</label>
+        <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">Project Title</label>
         <input 
           type="text" 
           value={data.title} 
           onChange={e => setData({...data, title: e.target.value})}
-          className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none"
+          className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all placeholder:text-gray-600 font-medium"
         />
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-text-muted">High-Level Overview</label>
+        <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">High-Level Overview</label>
         <textarea 
           value={data.overview} 
           onChange={e => setData({...data, overview: e.target.value})}
           rows={3}
-          className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none"
+          className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all resize-y text-sm"
         />
       </div>
 
       {/* Problem Section */}
-      <div className="space-y-2 p-4 bg-surface/50 rounded-lg border border-border">
-        <div className="flex justify-between items-center mb-2">
-          <label className="text-sm font-bold text-red-400">🚨 The Problem (Scenario)</label>
-          <button 
-            onClick={() => handleAiRefine('problem')}
-            disabled={!!loadingSection}
-            className="text-xs flex items-center gap-1 text-accent hover:text-white transition-colors"
-          >
-             {loadingSection === 'problem' ? <Loader2 size={12} className="animate-spin"/> : <Wand2 size={12} />}
-             Enhance
-          </button>
+      <div className="space-y-2 p-1 rounded-xl bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/20">
+        <div className="p-4">
+            <div className="flex justify-between items-center mb-2">
+            <label className="text-sm font-bold text-red-400 flex items-center gap-2">
+                <span className="p-1 bg-red-500/20 rounded">🚨</span> The Problem
+            </label>
+            <button 
+                onClick={() => handleAiRefine('problem')}
+                disabled={!!loadingSection}
+                className="text-xs flex items-center gap-1.5 text-red-400 hover:text-red-300 transition-colors px-2 py-1 rounded hover:bg-red-500/10"
+            >
+                {loadingSection === 'problem' ? <Loader2 size={12} className="animate-spin"/> : <Wand2 size={12} />}
+                Enhance
+            </button>
+            </div>
+            <textarea 
+            value={data.problem} 
+            onChange={e => setData({...data, problem: e.target.value})}
+            rows={4}
+            className="w-full bg-black/20 border border-red-500/10 rounded-lg p-3 text-text focus:border-red-500/50 outline-none text-sm transition-all"
+            placeholder="Describe the target environment and the security gap..."
+            />
         </div>
-        <textarea 
-          value={data.problem} 
-          onChange={e => setData({...data, problem: e.target.value})}
-          rows={4}
-          className="w-full bg-background border border-border rounded p-2 text-text focus:border-accent outline-none text-sm"
-          placeholder="Describe the target environment and the security gap..."
-        />
       </div>
 
       {/* Action Section */}
-      <div className="space-y-2 p-4 bg-surface/50 rounded-lg border border-border">
-        <div className="flex justify-between items-center mb-2">
-          <label className="text-sm font-bold text-yellow-400">⚡ The Action (Methodology)</label>
-          <button 
-            onClick={() => handleAiRefine('action')}
-            disabled={!!loadingSection}
-            className="text-xs flex items-center gap-1 text-accent hover:text-white transition-colors"
-          >
-            {loadingSection === 'action' ? <Loader2 size={12} className="animate-spin"/> : <Wand2 size={12} />}
-             Enhance
-          </button>
+      <div className="space-y-2 p-1 rounded-xl bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/20">
+         <div className="p-4">
+            <div className="flex justify-between items-center mb-2">
+            <label className="text-sm font-bold text-yellow-400 flex items-center gap-2">
+                <span className="p-1 bg-yellow-500/20 rounded">⚡</span> The Action
+            </label>
+            <button 
+                onClick={() => handleAiRefine('action')}
+                disabled={!!loadingSection}
+                className="text-xs flex items-center gap-1.5 text-yellow-400 hover:text-yellow-300 transition-colors px-2 py-1 rounded hover:bg-yellow-500/10"
+            >
+                {loadingSection === 'action' ? <Loader2 size={12} className="animate-spin"/> : <Wand2 size={12} />}
+                Enhance
+            </button>
+            </div>
+            <textarea 
+            value={data.action} 
+            onChange={e => setData({...data, action: e.target.value})}
+            rows={4}
+            className="w-full bg-black/20 border border-yellow-500/10 rounded-lg p-3 text-text focus:border-yellow-500/50 outline-none text-sm transition-all"
+            placeholder="Detail the tools and techniques used to exploit the vulnerability..."
+            />
         </div>
-        <textarea 
-          value={data.action} 
-          onChange={e => setData({...data, action: e.target.value})}
-          rows={4}
-          className="w-full bg-background border border-border rounded p-2 text-text focus:border-accent outline-none text-sm"
-          placeholder="Detail the tools and techniques used to exploit the vulnerability..."
-        />
       </div>
 
       {/* Outcome Section */}
-      <div className="space-y-2 p-4 bg-surface/50 rounded-lg border border-border">
-        <div className="flex justify-between items-center mb-2">
-          <label className="text-sm font-bold text-green-400">✅ The Outcome (Remediation)</label>
-          <button 
-            onClick={() => handleAiRefine('outcome')}
-            disabled={!!loadingSection}
-            className="text-xs flex items-center gap-1 text-accent hover:text-white transition-colors"
-          >
-            {loadingSection === 'outcome' ? <Loader2 size={12} className="animate-spin"/> : <Wand2 size={12} />}
-             Enhance
-          </button>
+      <div className="space-y-2 p-1 rounded-xl bg-gradient-to-r from-green-500/10 to-transparent border border-green-500/20">
+         <div className="p-4">
+            <div className="flex justify-between items-center mb-2">
+            <label className="text-sm font-bold text-green-400 flex items-center gap-2">
+                <span className="p-1 bg-green-500/20 rounded">✅</span> The Outcome
+            </label>
+            <button 
+                onClick={() => handleAiRefine('outcome')}
+                disabled={!!loadingSection}
+                className="text-xs flex items-center gap-1.5 text-green-400 hover:text-green-300 transition-colors px-2 py-1 rounded hover:bg-green-500/10"
+            >
+                {loadingSection === 'outcome' ? <Loader2 size={12} className="animate-spin"/> : <Wand2 size={12} />}
+                Enhance
+            </button>
+            </div>
+            <textarea 
+            value={data.outcome} 
+            onChange={e => setData({...data, outcome: e.target.value})}
+            rows={4}
+            className="w-full bg-black/20 border border-green-500/10 rounded-lg p-3 text-text focus:border-green-500/50 outline-none text-sm transition-all"
+            placeholder="What was the result? How was it fixed?"
+            />
         </div>
-        <textarea 
-          value={data.outcome} 
-          onChange={e => setData({...data, outcome: e.target.value})}
-          rows={4}
-          className="w-full bg-background border border-border rounded p-2 text-text focus:border-accent outline-none text-sm"
-          placeholder="What was the result? How was it fixed?"
-        />
       </div>
 
        <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-muted">Repository Link</label>
+          <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">Repository Link</label>
            <input 
             type="text" 
             value={data.repoLink} 
             onChange={e => setData({...data, repoLink: e.target.value})}
-            className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none text-sm"
+            className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all text-sm"
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-muted">Report PDF Link</label>
+          <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">Report PDF Link</label>
            <input 
             type="text" 
             value={data.reportLink} 
             onChange={e => setData({...data, reportLink: e.target.value})}
-            className="w-full bg-surface border border-border rounded p-2 text-text focus:border-accent outline-none text-sm"
+            className="w-full bg-surface-highlight/50 border border-border rounded-lg p-3 text-text focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all text-sm"
           />
         </div>
        </div>
